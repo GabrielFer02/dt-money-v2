@@ -1,9 +1,33 @@
-import { Header } from "../../components/Header/Header";
-import { Summary } from "../../components/Summary/Summary";
-import { SearchForm } from "../components/SearchForm/SearchForm";
-import style from "./Transactions.module.css";
+import { useEffect, useState } from 'react';
+import { Header } from '../../components/Header/Header';
+import { Summary } from '../../components/Summary/Summary';
+import { SearchForm } from '../components/SearchForm/SearchForm';
+import style from './Transactions.module.css';
+
+interface Transaction {
+  id: number;
+  description: string;
+  type: 'income' | 'outcome';
+  category: string;
+  price: number;
+  createdAt: string;
+}
 
 export function Transactions() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    async function loadTransactions() {
+      const response = await (
+        await fetch('http://localhost:3000/transactions')
+      ).json();
+
+      setTransactions(response);
+    }
+
+    loadTransactions();
+  }, []);
+
   return (
     <div>
       <Header />
@@ -14,22 +38,20 @@ export function Transactions() {
 
         <table className={style.transactionsTable}>
           <tbody>
-            <tr>
-              <td width="50%">Desenvolvimento de site</td>
-              <td>
-                <span className={style.income}>R$ 12.000,00</span>
-              </td>
-              <td>Venda</td>
-              <td>04/05/2025</td>
-            </tr>
-            <tr>
-              <td width="50%">Hamburguer</td>
-              <td>
-                <span className={style.outcome}>- R$ 59,00</span>
-              </td>
-              <td>Alimentação</td>
-              <td>04/05/2025</td>
-            </tr>
+            {transactions.map(transaction => {
+              return (
+                <tr key={transaction.id}>
+                  <td width='50%'>{transaction.description}</td>
+                  <td>
+                    <span className={style[transaction.type]}>
+                      {transaction.price}
+                    </span>
+                  </td>
+                  <td>{transaction.category}</td>
+                  <td>{transaction.createdAt}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </main>
