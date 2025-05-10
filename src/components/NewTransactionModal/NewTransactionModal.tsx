@@ -34,7 +34,7 @@ export function NewTransactionModal() {
   async function handleCreateNewTransaction(data: NewTransactionFormInputs) {
     const { category, description, price, type } = data;
 
-    await createTransaction({ category, description, price, type });
+    createTransaction({ category, description, price, type });
 
     reset();
   }
