@@ -36,7 +36,7 @@
       }
     }
 
-    button[type="submit"] {
+    button[type='submit'] {
       height: 58px;
       border: 0;
       background: var(--green-500);
@@ -47,7 +47,12 @@
       margin-top: 1.5rem;
       cursor: pointer;
 
-      &:hover {
+      &:disabled {
+        opacity: 0.6;
+        cursor: pointer;
+      }
+
+      &:not(:disabled):hover {
         background: var(--green-700);
         transition: background-color 0.2s;
       }
@@ -95,12 +100,12 @@
     color: var(--red-300);
   }
 
-  &[data-state="unchecked"]:hover {
+  &[data-state='unchecked']:hover {
     background: var(--gray-600);
     transition: background-color 0.2s;
   }
 
-  &[data-state="checked"].income {
+  &[data-state='checked'].income {
     color: var(--white);
     background: var(--green-500);
 
@@ -109,7 +114,7 @@
     }
   }
 
-  &[data-state="checked"].outcome {
+  &[data-state='checked'].outcome {
     color: var(--white);
     background: var(--red-500);
 

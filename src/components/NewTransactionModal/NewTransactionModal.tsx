@@ -1,9 +1,35 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import style from "./NewTransactionModal.module.css";
-import { ArrowCircleDown, ArrowCircleUp, X } from "phosphor-react";
-import * as RadioGroup from "@radix-ui/react-radio-group";
+import * as Dialog from '@radix-ui/react-dialog';
+import style from './NewTransactionModal.module.css';
+import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react';
+import * as RadioGroup from '@radix-ui/react-radio-group';
+import zod from 'zod';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const newTransactionFormSchema = zod.object({
+  discription: zod.string(),
+  price: zod.number(),
+  category: zod.string(),
+  type: zod.enum(['income', 'outcome']),
+});
+
+type NewTransactionFormInputs = zod.infer<typeof newTransactionFormSchema>;
 
 export function NewTransactionModal() {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<NewTransactionFormInputs>({
+    resolver: zodResolver(newTransactionFormSchema),
+    defaultValues: { type: 'income' },
+  });
+
+  async function handleCreateNewTransaction(data: NewTransactionFormInputs) {
+    
+  }
+
   return (
     <Dialog.Portal>
       <Dialog.Overlay className={style.overlay} />
@@ -15,29 +41,58 @@ export function NewTransactionModal() {
           <X size={24} />
         </Dialog.Close>
 
-        <form action="">
-          <input type="text" placeholder="Descrição" required />
-          <input type="number" placeholder="Preço" required />
-          <input type="text" placeholder="Categoria" required />
+        <form onSubmit={handleSubmit(handleCreateNewTransaction)}>
+          <input
+            type='text'
+            placeholder='Descrição'
+            required
+            {...register('discription')}
+          />
+          <input
+            type='number'
+            placeholder='Preço'
+            required
+            {...register('price', { valueAsNumber: true })}
+          />
+          <input
+            type='text'
+            placeholder='Categoria'
+            required
+            {...register('category')}
+          />
 
-          <RadioGroup.Root className={style.transactionType}>
-            <RadioGroup.Item
-              value="income"
-              className={`${style.transactionTypeButton} ${style.income}`}
-            >
-              <ArrowCircleUp size={24} className={style.income} />
-              Entrada
-            </RadioGroup.Item>
-            <RadioGroup.Item
-              value="outcome"
-              className={`${style.transactionTypeButton} ${style.outcome}`}
-            >
-              <ArrowCircleDown size={24} className={style.outcome} />
-              Saída
-            </RadioGroup.Item>
-          </RadioGroup.Root>
+          <Controller
+            control={control}
+            name='type'
+            render={({ field }) => {
+              return (
+                <RadioGroup.Root
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className={style.transactionType}
+                >
+                  <RadioGroup.Item
+                    value='income'
+                    className={`${style.transactionTypeButton} ${style.income}`}
+                  >
+                    <ArrowCircleUp size={24} className={style.income} />
+                    Entrada
+                  </RadioGroup.Item>
+                  <RadioGroup.Item
+                    value='outcome'
+                    className={`${style.transactionTypeButton} ${style.outcome}`}
+                  >
+                    <ArrowCircleDown size={24} className={style.outcome} />
+                    Saída
+                  </RadioGroup.Item>
+                </RadioGroup.Root>
+              );
+            }}
+          />
 
-          <button type="submit">Cadastrar</button>
+          <button type='submit' disabled={isSubmitting}>
+            Cadastrar
+          </button>
         </form>
       </Dialog.Content>
     </Dialog.Portal>
