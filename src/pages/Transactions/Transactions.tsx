@@ -4,7 +4,7 @@ import { Summary } from '../../components/Summary/Summary';
 import { SearchForm } from '../components/SearchForm/SearchForm';
 import style from './Transactions.module.css';
 import { TransactionsContext } from '../../contexts/TransactionsContext';
-import { priceFormatter } from '../../utils/formatter';
+import { dateFormatter, priceFormatter } from '../../utils/formatter';
 
 export function Transactions() {
   const { transactions } = useContext(TransactionsContext);
@@ -30,7 +30,9 @@ export function Transactions() {
                     </span>
                   </td>
                   <td>{transaction.category}</td>
-                  <td>{transaction.createdAt}</td>
+                  <td>
+                    {dateFormatter.format(new Date(transaction.createdAt))}
+                  </td>
                 </tr>
               );
             })}

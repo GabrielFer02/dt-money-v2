@@ -5,9 +5,11 @@ import * as RadioGroup from '@radix-ui/react-radio-group';
 import zod from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useContext } from 'react';
+import { TransactionsContext } from '../../contexts/TransactionsContext';
 
 const newTransactionFormSchema = zod.object({
-  discription: zod.string(),
+  description: zod.string(),
   price: zod.number(),
   category: zod.string(),
   type: zod.enum(['income', 'outcome']),
@@ -16,18 +18,25 @@ const newTransactionFormSchema = zod.object({
 type NewTransactionFormInputs = zod.infer<typeof newTransactionFormSchema>;
 
 export function NewTransactionModal() {
+  const { createTransaction } = useContext(TransactionsContext);
+
   const {
     control,
     register,
     handleSubmit,
     formState: { isSubmitting },
+    reset,
   } = useForm<NewTransactionFormInputs>({
     resolver: zodResolver(newTransactionFormSchema),
     defaultValues: { type: 'income' },
   });
 
   async function handleCreateNewTransaction(data: NewTransactionFormInputs) {
-    
+    const { category, description, price, type } = data;
+
+    await createTransaction({ category, description, price, type });
+
+    reset();
   }
 
   return (
@@ -46,7 +55,7 @@ export function NewTransactionModal() {
             type='text'
             placeholder='Descrição'
             required
-            {...register('discription')}
+            {...register('description')}
           />
           <input
             type='number'

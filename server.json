@@ -15,6 +15,30 @@
       "category": "Alimentação",
       "price": 60,
       "createdAt": "2025-05-08T21:36:36.739Z"
+    },
+    {
+      "id": 3,
+      "description": "Sanduiche",
+      "category": "Lanche",
+      "price": 12,
+      "type": "income",
+      "createdAt": "2025-05-10T21:45:07.940Z"
+    },
+    {
+      "id": "47f8",
+      "description": "Cinema",
+      "category": "Pizza",
+      "price": 45,
+      "type": "outcome",
+      "createdAt": "2025-05-10T21:47:05.429Z"
+    },
+    {
+      "id": "3230",
+      "description": "Pipoca",
+      "category": "Filme",
+      "price": 12,
+      "type": "outcome",
+      "createdAt": "2025-05-10T22:18:30.419Z"
     }
   ]
 }
